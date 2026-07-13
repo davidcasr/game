@@ -232,7 +232,19 @@ k.scene("main", async () => {
     btn.addEventListener("pointerup", release);
     btn.addEventListener("pointerleave", release);
     btn.addEventListener("pointercancel", release);
+    btn.addEventListener("contextmenu", (e) => e.preventDefault());
   }
+
+  // Safety net: if a button's own pointerup is swallowed (e.g. iOS interrupts
+  // the touch), releasing the pointer anywhere clears movement so the player
+  // never gets stuck walking.
+  function releaseAllDirs() {
+    if (activeDirs.length === 0) return;
+    activeDirs.length = 0;
+    stopAnims();
+  }
+  window.addEventListener("pointerup", releaseAllDirs);
+  window.addEventListener("pointercancel", releaseAllDirs);
 
   k.onUpdate(() => {
     if (player.isInDialogue) return;
