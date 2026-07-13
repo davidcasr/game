@@ -1,5 +1,5 @@
 import { dialogueData, scaleFactor } from "./constants";
-import { k } from "./kaboomCtx";
+import { k } from "./kaplayCtx";
 import { displayDialogue, setCamScale } from "./utils";
 
 k.loadSprite("spritesheet", "./spritesheet.png", {
@@ -198,6 +198,62 @@ k.scene("main", async () => {
     }
 
     if (keyMap[3]) {
+      if (player.curAnim() !== "walk-down") player.play("walk-down");
+      player.direction = "down";
+      player.move(0, player.speed);
+    }
+  });
+
+  // On-screen D-pad for touch devices. Buttons push/pop a direction stack so
+  // holding one moves the player; the last pressed direction wins.
+  const activeDirs = [];
+  const dpadButtons = {
+    right: document.getElementById("btn-right"),
+    left: document.getElementById("btn-left"),
+    up: document.getElementById("btn-up"),
+    down: document.getElementById("btn-down"),
+  };
+
+  for (const [dir, btn] of Object.entries(dpadButtons)) {
+    if (!btn) continue;
+
+    const press = (e) => {
+      e.preventDefault();
+      if (!activeDirs.includes(dir)) activeDirs.push(dir);
+    };
+    const release = (e) => {
+      e.preventDefault();
+      const i = activeDirs.indexOf(dir);
+      if (i !== -1) activeDirs.splice(i, 1);
+      if (activeDirs.length === 0) stopAnims();
+    };
+
+    btn.addEventListener("pointerdown", press);
+    btn.addEventListener("pointerup", release);
+    btn.addEventListener("pointerleave", release);
+    btn.addEventListener("pointercancel", release);
+  }
+
+  k.onUpdate(() => {
+    if (player.isInDialogue) return;
+    const dir = activeDirs[activeDirs.length - 1];
+    if (!dir) return;
+
+    if (dir === "right") {
+      player.flipX = false;
+      if (player.curAnim() !== "walk-side") player.play("walk-side");
+      player.direction = "right";
+      player.move(player.speed, 0);
+    } else if (dir === "left") {
+      player.flipX = true;
+      if (player.curAnim() !== "walk-side") player.play("walk-side");
+      player.direction = "left";
+      player.move(-player.speed, 0);
+    } else if (dir === "up") {
+      if (player.curAnim() !== "walk-up") player.play("walk-up");
+      player.direction = "up";
+      player.move(0, -player.speed);
+    } else if (dir === "down") {
       if (player.curAnim() !== "walk-down") player.play("walk-down");
       player.direction = "down";
       player.move(0, player.speed);
