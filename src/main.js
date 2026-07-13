@@ -88,6 +88,9 @@ k.scene("main", async () => {
     setCamScale(k);
   });
 
+  // The scene is built and assets are loaded — hide the loading screen.
+  document.getElementById("loading")?.classList.add("is-hidden");
+
   // Fade out the intro note the first time the player moves.
   let introNoteHidden = false;
   function hideIntroNote() {
