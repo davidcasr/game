@@ -88,6 +88,14 @@ k.scene("main", async () => {
     setCamScale(k);
   });
 
+  // Fade out the intro note the first time the player moves.
+  let introNoteHidden = false;
+  function hideIntroNote() {
+    if (introNoteHidden) return;
+    introNoteHidden = true;
+    document.getElementById("intro-note")?.classList.add("is-hidden");
+  }
+
   k.onUpdate(() => {
     k.camPos(player.worldPos().x, player.worldPos().y - 150);
   });
@@ -95,6 +103,7 @@ k.scene("main", async () => {
   k.onMouseDown((mouseBtn) => {
     if (mouseBtn !== "left" || player.isInDialogue) return;
 
+    hideIntroNote();
     const worldMousePos = k.toWorld(k.mousePos());
     player.moveTo(worldMousePos, player.speed);
 
@@ -174,6 +183,7 @@ k.scene("main", async () => {
     if (nbOfKeyPressed > 1) return;
 
     if (player.isInDialogue) return;
+    if (keyMap.some(Boolean)) hideIntroNote();
     if (keyMap[0]) {
       player.flipX = false;
       if (player.curAnim() !== "walk-side") player.play("walk-side");
@@ -219,6 +229,7 @@ k.scene("main", async () => {
 
     const press = (e) => {
       e.preventDefault();
+      hideIntroNote();
       if (!activeDirs.includes(dir)) activeDirs.push(dir);
     };
     const release = (e) => {
