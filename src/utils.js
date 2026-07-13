@@ -85,10 +85,11 @@ export function displayDialogue(text, onDisplayEnd) {
 
 export function setCamScale(k) {
   const resizeFactor = k.width() / k.height();
-  // Zoom in on portrait / narrow screens (mobile) so the scene stays readable.
+  // Portrait / narrow screens (mobile) keep a wider view so you see more of
+  // the room; wide landscape screens (desktop) zoom in so sprites aren't tiny.
   if (resizeFactor < 1) {
-    k.camScale(k.vec2(1.5));
-  } else {
     k.camScale(k.vec2(1));
+  } else {
+    k.camScale(k.vec2(1.5));
   }
 }
