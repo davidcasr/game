@@ -88,6 +88,9 @@ k.scene("main", async () => {
     setCamScale(k);
   });
 
+  // The scene is built and assets are loaded — hide the loading screen.
+  document.getElementById("loading")?.classList.add("is-hidden");
+
   k.onUpdate(() => {
     k.camPos(player.worldPos().x, player.worldPos().y - 150);
   });

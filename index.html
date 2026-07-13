@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>David Castro • Software Engineer</title>
     <meta
       name="description"
@@ -44,6 +47,14 @@
       @font-face {
         font-family: monogram;
         src: url(monogram.ttf);
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        /* Stop mobile pull-to-refresh and the rubber-band bounce while playing */
+        overscroll-behavior: none;
       }
 
       body {
@@ -99,10 +110,13 @@
       .note {
         position: absolute;
         left: 5%;
+        right: 5%;
         top: 1vh;
         display: flex;
         flex-direction: column;
         color: rgb(238, 238, 238);
+        /* Scale down on narrow screens so the intro text doesn't overflow */
+        font-size: clamp(0.9rem, 3.6vw, 2rem);
       }
 
       footer {
@@ -161,8 +175,29 @@
       #btn-left { grid-column: 1; grid-row: 2; }
       #btn-right { grid-column: 3; grid-row: 2; }
       #btn-down { grid-column: 2; grid-row: 3; }
+
+      /* Loading screen shown until the game assets are ready */
+      #loading {
+        position: absolute;
+        inset: 0;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #311047;
+        color: white;
+        font-family: monogram, monospace;
+        font-size: 2rem;
+        transition: opacity 0.4s ease;
+      }
+
+      #loading.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
     </style>
     <div id="app">
+      <div id="loading">Loading…</div>
       <div>
         <p class="note">
           Hi! I'm David and this is my office. I invite you to explore it and discover all my work information and other secrets... <br />
