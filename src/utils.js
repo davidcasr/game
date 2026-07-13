@@ -29,8 +29,11 @@ export function displayDialogue(text, onDisplayEnd) {
   const dialogueUI = document.getElementById("textbox-container");
   const dialogue = document.getElementById("dialogue");
   const closeBtn = document.getElementById("close");
+  const touchControls = document.getElementById("touch-controls");
 
   dialogueUI.style.display = "block";
+  // Hide the on-screen D-pad while reading so it can't overlap the Close button.
+  if (touchControls) touchControls.style.display = "none";
 
   const tokens = tokenize(text);
   let index = 0;
@@ -71,6 +74,8 @@ export function displayDialogue(text, onDisplayEnd) {
   function onCloseBtnClick() {
     onDisplayEnd();
     dialogueUI.style.display = "none";
+    // Restore the D-pad (back to its stylesheet value: grid on touch, none on desktop).
+    if (touchControls) touchControls.style.display = "";
     dialogue.innerHTML = "";
     clearInterval(intervalRef);
     closeBtn.removeEventListener("click", onCloseBtnClick);
