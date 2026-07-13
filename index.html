@@ -50,6 +50,10 @@
         font-family: monogram, monospace;
         font-size: 2rem;
         overflow: hidden;
+        /* Game UI: no accidental text selection / iOS callout while playing */
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
       }
 
       #app {

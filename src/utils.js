@@ -89,12 +89,19 @@ export function displayDialogue(text, onDisplayEnd) {
 }
 
 export function setCamScale(k) {
-  const resizeFactor = k.width() / k.height();
-  // Portrait / narrow screens (mobile) keep a wider view so you see more of
-  // the room; wide landscape screens (desktop) zoom in so sprites aren't tiny.
-  if (resizeFactor < 1) {
-    k.camScale(k.vec2(1));
-  } else {
+  // Use the real viewport size (CSS px) to adapt the zoom to the device.
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  if (w >= h) {
+    // Landscape / desktop: a fixed comfortable zoom so sprites aren't tiny.
     k.camScale(k.vec2(1.5));
+    return;
   }
+
+  // Portrait (phones): scale with screen width so small phones zoom out a
+  // little (wider view) and larger phones/tablets zoom in, kept within a
+  // comfortable range where the character stays readable and tappable.
+  const scale = Math.min(Math.max(w / 320, 1.15), 1.5);
+  k.camScale(k.vec2(scale));
 }
