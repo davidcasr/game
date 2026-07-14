@@ -99,9 +99,9 @@ export function setCamScale(k) {
     return;
   }
 
-  // Portrait (phones): scale with screen width so small phones zoom out a
-  // little (wider view) and larger phones/tablets zoom in, kept within a
-  // comfortable range where the character stays readable and tappable.
-  const scale = Math.min(Math.max(w / 320, 1.15), 1.5);
+  // Portrait: phones sit around a comfortable ~1.2 (not too close, not too
+  // far); only larger portrait screens (tablets) zoom in further. The gentle
+  // ramp keeps the character readable without cramping the view on wide phones.
+  const scale = Math.min(Math.max(w / 460, 1.2), 1.5);
   k.camScale(k.vec2(scale));
 }
